@@ -1,50 +1,128 @@
 import 'package:flutter/material.dart';
-import 'package:live_test_11/weather_list.dart';
 
-
-void main() {
+void main()
+{
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatelessWidget{
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: WeatherList(),
+  Widget build(BuildContext context){
+    return const MaterialApp(
+      home: HomeScreen(),
+      title: 'Module-11_Live-Test',
     );
   }
 }
 
+class HomeScreen extends StatefulWidget{
+  const HomeScreen({super.key});
 
+  @override
+  State<StatefulWidget> createState() => HomeScreenIU();
+}
 
-class WeatherCard extends StatelessWidget {
-  final Map<String, dynamic> cityWeather;
+class HomeScreenIU extends State<HomeScreen>{
+  final List<Weather> weatherInfo = [
+    Weather (
+      city: "NEW YORK",
+      temperature: 20,
+      condition: "CLEAR",
+      humidity: 60,
+      windSpeed: 5.5,
+    ),
 
-  const WeatherCard({super.key, required this.cityWeather});
+    Weather (
+      city: "LOS ANGELES",
+      temperature: 25,
+      condition: "SUNNY",
+      humidity: 50,
+      windSpeed: 6.8,
+    ),
+
+    Weather (
+      city: "LONDON",
+      temperature: 15,
+      condition: "PARTLY CLOUDY",
+      humidity: 70,
+      windSpeed: 4.2,
+    ),
+
+    Weather (
+      city: "TOKYO",
+      temperature: 28,
+      condition: "RAINY",
+      humidity: 75,
+      windSpeed: 8.0,
+    ),
+
+    Weather (
+      city: "SYDNEY",
+      temperature: 22,
+      condition: "CLOUDY",
+      humidity: 55,
+      windSpeed: 7.3,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'City: ${cityWeather['city']}',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-            ),
-            Text('Temperature: ${cityWeather['temperature']}°C' , style: const TextStyle(color: Colors.grey),),
-            Text('Condition: ${cityWeather['condition']}', style: const TextStyle(color: Colors.grey),),
-            Text('Humidity: ${cityWeather['humidity']}%', style: const TextStyle(color: Colors.grey),),
-            Text('Wind Speed: ${cityWeather['windSpeed']} km/h', style: const TextStyle(color: Colors.grey),),
-          ],
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Weather Information App'),
       ),
+
+      body: ListView.builder(
+        itemCount: weatherInfo.length,
+        itemBuilder: (context, index) {
+          Weather weather = weatherInfo[index];
+          return Card(
+            child: Padding(
+              padding: const EdgeInsets.all(18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('City: ${weather.city}'),
+                  Text('Temperature: ${weather.temperature}°C'),
+                  Text('Condition: ${weather.condition}'),
+                  Text('Humidity: ${weather.humidity}%'),
+                  Text('Wind Speed: ${weather.windSpeed} km/h'),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class Weather{
+  final String city;
+  final int temperature;
+  final String condition;
+  final int humidity;
+  final double windSpeed;
+
+  Weather( {
+    required this.city,
+    required this.temperature,
+    required this.condition,
+    required this.humidity,
+    required this.windSpeed,
+
+  }
+  );
+
+  factory Weather.fromJson(Map<String, dynamic> json){
+    return Weather(
+      city: json['city'],
+      temperature: json['temperature'],
+      condition: json['condition'],
+      humidity: json['humidity'],
+      windSpeed: json['windSpeed'].toDouble(),
     );
   }
 }
